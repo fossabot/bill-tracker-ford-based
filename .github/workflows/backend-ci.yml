@@ -1,0 +1,48 @@
+name: backend-ci
+
+on:
+  pull_request:
+    paths:
+        - 'backend/**'
+    push:
+        branches: [ main ]
+        paths:
+            - 'backend/**'
+
+jobs:
+  build-test-scan:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Test
+        run: ./gradlew test
+
+      # SonarCloud Analysis
+      - name: SonarCloud Scan
+        env:
+            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+            SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+            SONAR_ORG: ${{ secrets.SONAR_ORG }}
+        run: ./gradlew sonar
+
+      # FOSSA analysis
+      - name: Install FOSSA CLI
+        run: |
+          curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/fossas/fossa-cli/master/install.sh | bash
+
+      - name: FOSSA Analyze
+        env:
+          FOSSA_API_KEY: ${{ secrets.FOSSA_API_KEY }}
+        run: fossa analyze
