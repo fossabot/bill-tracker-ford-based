@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-init-users
+      author: brett
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: created_at
+                  type: timestamptz
+                  constraints:
+                    nullable: false

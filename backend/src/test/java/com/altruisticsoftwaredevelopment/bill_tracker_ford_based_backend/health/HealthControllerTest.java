@@ -1,12 +1,15 @@
+// File: backend/src/test/java/com/altruisticsoftwaredevelopment/bill_tracker_ford_based_backend/health/HealthControllerTest.java
 package com.altruisticsoftwaredevelopment.bill_tracker_ford_based_backend.health;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.context.TestPropertySource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestPropertySource(properties = "spring.liquibase.enabled=false")
 class HealthControllerTest {
 
     @LocalServerPort
